@@ -1,4 +1,5 @@
-import React, {useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
+import ReactDOM from 'react-dom';
 import './Video.css';
 import VideoFooter from "./VideoFooter";
 import VideoSidebar from "./VideoSidebar";
@@ -13,10 +14,11 @@ function Video({
     song,
     likes,
     messages,
-    shares
+    shares,
+    containerRef
     }) {
     const [playing, setPlaying] = useState(false);
-    const [muted, setMuted] = useState(false);
+    const [muted, setMuted] = useState(true);
     const videoRef = useRef(null);
 
     const onVideoPress = () => {
@@ -29,6 +31,20 @@ function Video({
             videoRef.current.play();
         }
     }
+
+    const handleScroll = () => {
+        setPlaying(false);
+        videoRef.current.pause();
+    }
+
+    useEffect(() => {
+        let ref = containerRef.current;
+        ReactDOM.findDOMNode(ref).addEventListener('scroll', handleScroll);
+
+        return () => {
+            ReactDOM.findDOMNode(ref).removeEventListener('scroll', handleScroll);
+        };
+    }, [])
 
     return (
         <div className="video">

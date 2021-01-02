@@ -2,9 +2,21 @@ import React, {useRef, useState} from 'react'
 import './Video.css';
 import VideoFooter from "./VideoFooter";
 import VideoSidebar from "./VideoSidebar";
+import VolumeUpIcon from '@material-ui/icons/VolumeUp';
+import VolumeOffIcon from '@material-ui/icons/VolumeOff';
+import {IconButton} from "@material-ui/core";
 
-function Video() {
+function Video({
+    url,
+    channel,
+    description,
+    song,
+    likes,
+    messages,
+    shares
+    }) {
     const [playing, setPlaying] = useState(false);
+    const [muted, setMuted] = useState(false);
     const videoRef = useRef(null);
 
     const onVideoPress = () => {
@@ -23,18 +35,33 @@ function Video() {
             <video
                 className="video__player"
                 loop
+                muted={muted}
                 onClick={onVideoPress}
                 ref={videoRef}
-                src="https://v19.tiktokcdn.com/7fe0ac353a20706f5787eaebbfa85cd0/5fefce28/video/tos/alisg/tos-alisg-pve-0037c001/1b2cce2205e44c55bc90e155b705cfbc/?a=1233&br=4132&bt=2066&cd=0%7C0%7C1&cr=0&cs=0&cv=1&dr=0&ds=3&er=&l=20210101193627010189048210157443D1&lr=tiktok_m&mime_type=video_mp4&qs=0&rc=amk5cG9zOWw5eTMzZTczM0ApaWdkZGk6Mzw6Nzo8Z2ZkaGdnbmI1amYxbGhfLS1hMTRzcy9jNGIyLi0tNS8uMWMzYWI6Yw%3D%3D&vl=&vr="
+                src={url}
             >
             </video>
+            <div className="video__volume">
+                { muted ?
+                    <IconButton className="video__volumeIconButton" onClick={() => setMuted(false)}>
+                        <VolumeOffIcon fontSize="large"/>
+                    </IconButton>
+                    :
+                    <IconButton className="video__volumeIconButton" onClick={() => setMuted(true)}>
+                        <VolumeUpIcon fontSize="large"/>
+                    </IconButton>
+                }
+
+            </div>
             <VideoFooter
-                channel={'channel'}
-                description={'this is a description'}
-                song={'this is a song'}
+                channel={channel}
+                description={description}
+                song={song}
             />
             <VideoSidebar
-
+                likes={likes}
+                messages={messages}
+                shares={shares}
             />
         </div>
     );
